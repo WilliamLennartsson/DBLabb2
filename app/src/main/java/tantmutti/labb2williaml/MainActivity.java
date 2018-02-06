@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         importViewElements();
-        dbHelper.createUser("Will", "Hej");
 
     }
 
@@ -34,12 +33,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(View view){
+
         String userName = userNameEditText.getText().toString();
         String userPassword = userPasswordEditText.getText().toString();
 
         boolean b = dbHelper.loginUser(userName, userPassword);
         if (b){
+            User user = dbHelper.getCurrentUser();
+            int userID = user.getUserID();
             Intent intent = new Intent(this, TodoActivity.class);
+            intent.putExtra("userID", userID);
             startActivity(intent);
 
             Log.d(TAG, "Du är inloggad");
@@ -51,10 +54,18 @@ public class MainActivity extends AppCompatActivity {
         String userName = userNameEditText.getText().toString();
         String userPassword = userPasswordEditText.getText().toString();
 
-        boolean b = dbHelper.createUser(userName, userPassword);
-        if (b){
-            Toast.makeText(this, "User Created", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "onClickReg: " + b);
+        boolean userExists = dbHelper.checkIfuserExists(userName);
+
+
+        if (!userExists){
+            boolean b = dbHelper.createUser(userName, userPassword);
+            if (b) {
+                Toast.makeText(this, "User Created", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClickReg: " + b);
+            }
+
+        } else {
+            Toast.makeText(this, "User Already Exists", Toast.LENGTH_SHORT).show();
         }
     }
 }
