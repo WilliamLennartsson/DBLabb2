@@ -27,7 +27,7 @@
     <EditText
         android:id="@+id/editTodoContent"
         android:layout_width="371dp"
-        android:layout_height="334dp"
+        android:layout_height="308dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -38,10 +38,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.496" />
+        app:layout_constraintVertical_bias="0.629" />
 
     <Button
         android:id="@+id/addTodoBtn"
@@ -61,7 +61,7 @@
 
     <ListView
         android:id="@+id/todoListView"
-        android:layout_width="375dp"
+        android:layout_width="372dp"
         android:layout_height="516dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -69,9 +69,52 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <RadioButton
+        android:id="@+id/fritid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:onClick="rCategoryFritidClicked"
+        android:text="Fritid"
+        app:layout_constraintBottom_toTopOf="@+id/editTodoContent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.857" />
+
+    <RadioButton
+        android:id="@+id/InteIdag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:onClick="rCategoryInteIdagClicked"
+        android:text="Inte Idag"
+        app:layout_constraintBottom_toTopOf="@+id/editTodoContent"
+        app:layout_constraintEnd_toStartOf="@+id/Viktigt"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toEndOf="@+id/fritid" />
+
+    <RadioButton
+        android:id="@+id/Viktigt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginTop="8dp"
+        android:onClick="rCategoryViktigtClicked"
+        android:text="Viktigt"
+        app:layout_constraintBottom_toTopOf="@+id/editTodoContent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.857" />
 
 </android.support.constraint.ConstraintLayout>

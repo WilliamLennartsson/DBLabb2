@@ -223,22 +223,20 @@ public class DBHelper extends SQLiteOpenHelper{
 
         boolean success = c.moveToFirst();
         if (success){
+
             while (c.moveToNext()){
-
-
-                Todo todo = new Todo();
-                todo.setTodoTitle(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_TITLE)));
-                todo.setTotoContent(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_CONTENTS)));
-                todo.setTodoCategory(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_CATEGORY_ID)));
-                todo.setTodoUserID(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_USER_ID)));
-
-                Log.d(TAG, "getAllUserTodos: userID " + DBHelper.COLUMN_TODO_USER_ID);
                 if ((c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_USER_ID)) == userID)){
+
+                    Todo todo = new Todo();
+                    todo.setTodoTitle(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_TITLE)));
+                    todo.setTotoContent(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_CONTENTS)));
+                    todo.setTodoCategory(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_CATEGORY_ID)));
+                    todo.setTodoUserID(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_USER_ID)));
+
+                    Log.d(TAG, "getAllUserTodos: userID " + DBHelper.COLUMN_TODO_USER_ID);
                     Log.d(TAG, "Added:");
                     userTodos.add(todo);
                 }
-
-
             }
         }
 

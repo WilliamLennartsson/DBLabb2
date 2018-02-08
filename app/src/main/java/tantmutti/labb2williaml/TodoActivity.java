@@ -10,11 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class TodoActivity extends AppCompatActivity {
     private ListView listView;
     private EditText titleTextView, contentTextView;
     private Button submitBtn, addTodoBtn;
+    private RadioButton fritidRBtn, inteIdagRBtn, viktigtRBtn;
 
     private List<Todo> todoList;
     private List<String> titleArray;
@@ -34,6 +37,7 @@ public class TodoActivity extends AppCompatActivity {
     private String TAG = "willeTodo";
     private DBHelper dbHelper;
     private User currentUser = new User();
+    private int categoryToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,29 +78,60 @@ public class TodoActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
+       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               Log.d(TAG, todoList.get(position).getTotoContent());
+           }
+       });
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+
                 String title = titleTextView.getText().toString();
                 String content = contentTextView.getText().toString();
-                int category = 1;
+                int category = categoryToggle;
+                Log.d(TAG, "CategoryToggle" + categoryToggle);
                 int userID = currentUser.getUserID();
                 dbHelper.createTodo(title, content, category, userID);
-
                 titleArray.add(titleTextView.getText().toString());
 
+                Todo todo = new Todo(title, content, category, userID);
+                todoList.add(todo);
                 showListAfterInput();
                 adapter.notifyDataSetChanged();
             }
         });
+
+
     }
+
+    public void rCategoryFritidClicked (View view) {
+        categoryToggle = 1;
+        inteIdagRBtn.setChecked(false);
+        viktigtRBtn.setChecked(false);
+    }
+    public void rCategoryInteIdagClicked (View view) {
+        categoryToggle = 2;
+        fritidRBtn.setChecked(false);
+        viktigtRBtn.setChecked(false);
+    }
+    public void rCategoryViktigtClicked (View view) {
+        categoryToggle = 3;
+        fritidRBtn.setChecked(false);
+        inteIdagRBtn.setChecked(false);
+    }
+
 
     private void showListAfterInput() {
         titleTextView.setVisibility(View.INVISIBLE);
         contentTextView.setVisibility(View.INVISIBLE);
         submitBtn.setVisibility(View.INVISIBLE);
+        fritidRBtn.setVisibility(View.INVISIBLE);
+        inteIdagRBtn.setVisibility(View.INVISIBLE);
+        viktigtRBtn.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
     }
     private void importViewElements(){
@@ -112,6 +147,15 @@ public class TodoActivity extends AppCompatActivity {
 
 
 
+        fritidRBtn = findViewById(R.id.fritid);
+        inteIdagRBtn = findViewById(R.id.InteIdag);
+        viktigtRBtn = findViewById(R.id.Viktigt);
+
+
+        fritidRBtn.setVisibility(View.INVISIBLE);
+        inteIdagRBtn.setVisibility(View.INVISIBLE);
+        viktigtRBtn.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -126,6 +170,13 @@ public class TodoActivity extends AppCompatActivity {
         titleTextView.setVisibility(View.VISIBLE);
         contentTextView.setVisibility(View.VISIBLE);
         submitBtn.setVisibility(View.VISIBLE);
+
+        fritidRBtn.setVisibility(View.VISIBLE);
+        inteIdagRBtn.setVisibility(View.VISIBLE);
+        viktigtRBtn.setVisibility(View.VISIBLE);
+
+        inteIdagRBtn.setChecked(true);
+        categoryToggle = 2;
     }
 
 

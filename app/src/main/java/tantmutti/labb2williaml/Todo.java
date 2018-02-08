@@ -21,6 +21,12 @@ public class Todo {
     public Todo(){
 
     }
+    public Todo (String todoTitle, String todoContent, int todoCategory, int todoUserID){
+        this.todoTitle = todoTitle;
+        this.totoContent = todoContent;
+        this.todoCategory = todoCategory;
+        this.todoUserID = todoUserID;
+    }
     public Todo (String todoTitle, String todoContent, int todoCategory){
         this.todoTitle = todoTitle;
         this.totoContent = todoContent;
