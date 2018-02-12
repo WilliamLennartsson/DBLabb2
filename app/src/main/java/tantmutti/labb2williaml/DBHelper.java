@@ -73,6 +73,8 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TODO);
+        importDummyData(db);
+        db.close();
         Log.d(TAG, "onCreate: ");
     }
 
@@ -221,19 +223,48 @@ public class DBHelper extends SQLiteOpenHelper{
         return b;
     }
 
+
     public boolean updateTodo(Todo todo){
             boolean b = false;
             SQLiteDatabase db = getWritableDatabase();
             //String syster = "UPDATE Todo SET TODO_TITLE = todo.getTitle, contents = todo.getcontentns WHERE Todo.id"
+
             String bror = "UPDATE " + TABLE_NAME_TODO +
-                    " SET " + COLUMN_TODO_TITLE + " = " + todo.getTodoTitle() + ", "
-                    + COLUMN_TODO_CONTENTS + " = " + todo.getTotoContent() +
+                    " SET " + COLUMN_TODO_TITLE + " = " + COLUMN_TODO_TITLE + ", "
+                    + COLUMN_TODO_CONTENTS + " = " + todo.getTotoContent().toString() +
                     " WHERE " + COLUMN_TODO_ID + " = " + todo.getTodoID() + ";";
 
 
             db.execSQL(bror);
             db.close();
             return b;
+    }
+
+
+    public void logTodo (Todo todo){
+        Log.d(TAG, "inside logTodo + categoryID: " + todo.getTodoCategory());
+        SQLiteDatabase db = getReadableDatabase();
+
+       /*     String q = "SELECT " + COLUMN_CATEGORY_NAME +  " FROM " + TABLE_NAME_CATEGORY + " JOIN " + TABLE_NAME_TODO +
+                    " ON " + COLUMN_CATEGORY_ID + " = " + COLUMN_TODO_CATEGORY_ID +
+                    " WHERE " + COLUMN_CATEGORY_ID + " = " + todo.getTodoCategory();
+*/
+
+
+        String que = "SELECT * FROM " + TABLE_NAME_TODO +
+                " JOIN " + TABLE_NAME_CATEGORY + " ON " + COLUMN_TODO_CATEGORY_ID + " = " + COLUMN_CATEGORY_ID +
+                " WHERE " + COLUMN_CATEGORY_ID + " = " + todo.getTodoCategory() + ";";
+        Cursor c = db.rawQuery(que, null);
+        if (c.getCount() > 0){
+            while (c.moveToNext()){
+                Todo tempTodo = new Todo();
+                tempTodo.setCategoryString(c.getString(c.getColumnIndex(DBHelper.COLUMN_CATEGORY_NAME)));
+                Log.d(TAG, ":tempTodo in DB " + tempTodo.getCategoryString());
+            }
+        }
+
+        db.close();
+
     }
 
     public List<Todo> getTodoWithCategory(int categoryInput) {

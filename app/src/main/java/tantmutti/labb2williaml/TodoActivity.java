@@ -186,10 +186,14 @@ public class TodoActivity extends AppCompatActivity {
                 onClickAddBtn();
                 return true;
             case R.id.testButton:
-                Todo todo = todoList.get(2);
-                todo.setTotoContent("Bror");
-                boolean b = dbHelper.updateTodo(todo);
-                Log.d(TAG, "onOptionsItemSelected: " + b);
+//                Todo todo = todoList.get(2);
+//                todo.setTotoContent("Bror");
+//                boolean b = dbHelper.updateTodo(todo);
+//                adapter.notifyDataSetChanged();
+//                Log.d(TAG, "onOptionsItemSelected: " + b);
+
+                dbHelper.logTodo(todoList.get(1));
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
