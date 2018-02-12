@@ -74,14 +74,13 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TODO);
         importDummyData(db);
-        db.close();
         Log.d(TAG, "onCreate: ");
     }
 
 
 
     private void importDummyData(SQLiteDatabase db) {
-        db.execSQL("INSERT INTO " + TABLE_NAME_CATEGORY +" (" + COLUMN_CATEGORY_NAME + ") VALUES ('Fritid'), ('Inte Idag'), ('Viktigt')");
+        db.execSQL("INSERT INTO " + TABLE_NAME_CATEGORY + " (" + COLUMN_CATEGORY_NAME + ") VALUES ('Fritid'), ('Inte Idag'), ('Viktigt')");
 
 
 
@@ -206,7 +205,7 @@ public class DBHelper extends SQLiteOpenHelper{
         content.put(COLUMN_TODO_CONTENTS, todoContent);
         content.put(COLUMN_TODO_CATEGORY_ID, categoryID);
         content.put(COLUMN_TODO_USER_ID, userID);
-            Log.d(TAG, "Creating todo: " + userID);
+            Log.d(TAG, "viktigtRBtn.setChecked(false); todo: " + userID);
         long success = db.insert(TABLE_NAME_TODO, null, content);
 
         db.close();
@@ -224,70 +223,56 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
 
-    public boolean updateTodo(Todo todo){
-            boolean b = false;
+    public void updateTodo(Todo todo){
             SQLiteDatabase db = getWritableDatabase();
             //String syster = "UPDATE Todo SET TODO_TITLE = todo.getTitle, contents = todo.getcontentns WHERE Todo.id"
 
-            String bror = "UPDATE " + TABLE_NAME_TODO +
-                    " SET " + COLUMN_TODO_TITLE + " = " + COLUMN_TODO_TITLE + ", "
-                    + COLUMN_TODO_CONTENTS + " = " + todo.getTotoContent().toString() +
-                    " WHERE " + COLUMN_TODO_ID + " = " + todo.getTodoID() + ";";
 
-
-            db.execSQL(bror);
+            ContentValues content = new ContentValues();
+            content.put(COLUMN_TODO_CONTENTS, "UPDATEDMAADDAAAFAAAAKKKAAAAAA");
+            long success = db.update(DBHelper.TABLE_NAME_TODO, content, "toDoID=" + todo.getTodoID(), null);
+            Log.d(TAG, "updateTodo: " + success);
             db.close();
-            return b;
-    }
 
+    }
 
     public void logTodo (Todo todo){
         Log.d(TAG, "inside logTodo + categoryID: " + todo.getTodoCategory());
         SQLiteDatabase db = getReadableDatabase();
 
-       /*     String q = "SELECT " + COLUMN_CATEGORY_NAME +  " FROM " + TABLE_NAME_CATEGORY + " JOIN " + TABLE_NAME_TODO +
-                    " ON " + COLUMN_CATEGORY_ID + " = " + COLUMN_TODO_CATEGORY_ID +
-                    " WHERE " + COLUMN_CATEGORY_ID + " = " + todo.getTodoCategory();
-*/
-
-
         String que = "SELECT * FROM " + TABLE_NAME_TODO +
                 " JOIN " + TABLE_NAME_CATEGORY + " ON " + COLUMN_TODO_CATEGORY_ID + " = " + COLUMN_CATEGORY_ID +
                 " WHERE " + COLUMN_CATEGORY_ID + " = " + todo.getTodoCategory() + ";";
         Cursor c = db.rawQuery(que, null);
+
         if (c.getCount() > 0){
+            Todo tempTodo = new Todo();
             while (c.moveToNext()){
-                Todo tempTodo = new Todo();
                 tempTodo.setCategoryString(c.getString(c.getColumnIndex(DBHelper.COLUMN_CATEGORY_NAME)));
-                Log.d(TAG, ":tempTodo in DB " + tempTodo.getCategoryString());
             }
+            Log.d(TAG, ":tempTodo in DB " + tempTodo.getCategoryString() + " Count: " +c.getCount());
+
         }
 
         db.close();
 
     }
-
-    public List<Todo> getTodoWithCategory(int categoryInput) {
-        //get category with index
-        List<Todo> todos = new ArrayList<>();
-
-        String quary = "SELECT * FROM " + TABLE_NAME_CATEGORY + " INNER JOIN " + TABLE_NAME_TODO +
-                " ON " + COLUMN_CATEGORY_ID + " = " + COLUMN_TODO_CATEGORY_ID +
-                " WHERE " + COLUMN_CATEGORY_ID + " = " + categoryInput + ";";
-
+    //Same as logTodo method but without query
+    public void logCategory (Todo todo){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery(
-                quary,
-                null
-        );
+        Cursor c = db.query(DBHelper.TABLE_NAME_CATEGORY, null, null, null, null, null, null);
+
         boolean success = c.moveToFirst();
 
         if (success) {
-            Log.d(TAG, "getTodoWithCategory success" + success);
+            while (c.moveToNext()){
+                if (c.getInt(c.getColumnIndex(DBHelper.COLUMN_CATEGORY_ID)) == todo.getTodoCategory()){
+                    Log.d(TAG, "logCategory: " + todo.getTodoCategory() + " Cat: " + c.getString(c.getColumnIndex(DBHelper.COLUMN_CATEGORY_NAME)));
+                }
+            }
         }
 
-        return todos;
-
+        db.close();
     }
 
     public List<Todo> getAllUserTodos (int userID){

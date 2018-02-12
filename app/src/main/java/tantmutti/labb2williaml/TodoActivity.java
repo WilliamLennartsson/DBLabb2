@@ -61,8 +61,12 @@ public class TodoActivity extends AppCompatActivity {
         }
         setInitialAdapter();
         setListeners();
-
+        categoryToggle = 2;
+        viktigtRBtn.setChecked(false);
+        fritidRBtn.setChecked(false);
+        inteIdagRBtn.setChecked(true);
     }
+
     public void setCategoryAdapter(int category){
         todoList = dbHelper.getAllUserTodos(currentUser.getUserID());
 
@@ -116,12 +120,17 @@ public class TodoActivity extends AppCompatActivity {
     }
 
     public void onClickDelete (View view){
-        Log.d(TAG, "todo id on delete" + todoList.get(1).getTodoID());
 
-        dbHelper.deleteTodo(todoList.get(1).getTodoID());
-        todoList.remove(1);
-        titleArray.remove(1);
-        adapter.notifyDataSetChanged();
+        if (todoList.size() > 0) {
+            Log.d(TAG, "todo id on delete" + todoList.get(1).getTodoID());
+
+            dbHelper.deleteTodo(todoList.get(0).getTodoID());
+            todoList.remove(0);
+            titleArray.remove(0);
+            adapter.notifyDataSetChanged();
+        } else {
+            Log.d(TAG, "onClickDelete: Empty list");
+        }
     }
 
     private void showListAfterInput() {
@@ -133,27 +142,8 @@ public class TodoActivity extends AppCompatActivity {
         viktigtRBtn.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
     }
-    private void importViewElements(){
-        listView = findViewById(R.id.todoListView);
-        categorySpinner = findViewById(R.id.categorySpinner);
 
-        titleTextView = findViewById(R.id.editTodoTitle);
-        contentTextView = findViewById(R.id.editTodoContent);
-        submitBtn = findViewById(R.id.addTodoBtn);
 
-        fritidRBtn = findViewById(R.id.fritid);
-        inteIdagRBtn = findViewById(R.id.InteIdag);
-        viktigtRBtn = findViewById(R.id.Viktigt);
-
-        titleTextView.setVisibility(View.INVISIBLE);
-        contentTextView.setVisibility(View.INVISIBLE);
-        submitBtn.setVisibility(View.INVISIBLE);
-
-        fritidRBtn.setVisibility(View.INVISIBLE);
-        inteIdagRBtn.setVisibility(View.INVISIBLE);
-        viktigtRBtn.setVisibility(View.INVISIBLE);
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -191,8 +181,9 @@ public class TodoActivity extends AppCompatActivity {
 //                boolean b = dbHelper.updateTodo(todo);
 //                adapter.notifyDataSetChanged();
 //                Log.d(TAG, "onOptionsItemSelected: " + b);
-
-                dbHelper.logTodo(todoList.get(1));
+                if (todoList.size() > 0) {
+                    dbHelper.updateTodo(todoList.get(0));
+                }
 
                 return true;
             default:
@@ -220,7 +211,8 @@ public class TodoActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, todoList.get(position).getTotoContent());
+                Log.d(TAG, "" + todoList.get(position).getTotoContent());
+                dbHelper.logTodo(todoList.get(position));
             }
         });
 
@@ -243,5 +235,25 @@ public class TodoActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void importViewElements() {
+        listView = findViewById(R.id.todoListView);
+        categorySpinner = findViewById(R.id.categorySpinner);
+
+        titleTextView = findViewById(R.id.editTodoTitle);
+        contentTextView = findViewById(R.id.editTodoContent);
+        submitBtn = findViewById(R.id.addTodoBtn);
+
+        fritidRBtn = findViewById(R.id.fritid);
+        inteIdagRBtn = findViewById(R.id.InteIdag);
+        viktigtRBtn = findViewById(R.id.Viktigt);
+
+        titleTextView.setVisibility(View.INVISIBLE);
+        contentTextView.setVisibility(View.INVISIBLE);
+        submitBtn.setVisibility(View.INVISIBLE);
+
+        fritidRBtn.setVisibility(View.INVISIBLE);
+        inteIdagRBtn.setVisibility(View.INVISIBLE);
+        viktigtRBtn.setVisibility(View.INVISIBLE);
     }
 }
