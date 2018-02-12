@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Labb2WilliamL</string>
+    <string-array name="categories">
+        <item>Alla</item>
+        <item>Fritid</item>
+        <item>Inte Idag</item>
+        <item>Viktigt</item>
+    </string-array>
 </resources>

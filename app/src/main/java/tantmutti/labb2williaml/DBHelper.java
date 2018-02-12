@@ -193,15 +193,11 @@ public class DBHelper extends SQLiteOpenHelper{
         return currentUser;
     }
 
-    private List<Todo> getAllTodos(){
-        List<Todo> todos = new ArrayList<>();
-
-
-        return todos;
-    }
 
         public boolean createTodo(String todoTitle, String todoContent, int categoryID, int userID){
-        SQLiteDatabase db = getWritableDatabase();
+        String query = "INSERT INTO " + DBHelper.TABLE_NAME_CATEGORY+ " VALUES (0,?,?)";
+
+            SQLiteDatabase db = getWritableDatabase();
 
         ContentValues content = new ContentValues();
         content.put(COLUMN_TODO_TITLE, todoTitle);
@@ -213,6 +209,54 @@ public class DBHelper extends SQLiteOpenHelper{
 
         db.close();
         return success >=0;
+    }
+
+    public boolean deleteTodo(int todoID){
+        boolean b = false;
+
+        SQLiteDatabase db = getWritableDatabase();
+        String quary = "DELETE FROM " + TABLE_NAME_TODO + " WHERE " + COLUMN_TODO_ID + " = " + todoID;
+        db.execSQL(quary);
+        db.close();
+        return b;
+    }
+
+    public boolean updateTodo(Todo todo){
+            boolean b = false;
+            SQLiteDatabase db = getWritableDatabase();
+            //String syster = "UPDATE Todo SET TODO_TITLE = todo.getTitle, contents = todo.getcontentns WHERE Todo.id"
+            String bror = "UPDATE " + TABLE_NAME_TODO +
+                    " SET " + COLUMN_TODO_TITLE + " = " + todo.getTodoTitle() + ", "
+                    + COLUMN_TODO_CONTENTS + " = " + todo.getTotoContent() +
+                    " WHERE " + COLUMN_TODO_ID + " = " + todo.getTodoID() + ";";
+
+
+            db.execSQL(bror);
+            db.close();
+            return b;
+    }
+
+    public List<Todo> getTodoWithCategory(int categoryInput) {
+        //get category with index
+        List<Todo> todos = new ArrayList<>();
+
+        String quary = "SELECT * FROM " + TABLE_NAME_CATEGORY + " INNER JOIN " + TABLE_NAME_TODO +
+                " ON " + COLUMN_CATEGORY_ID + " = " + COLUMN_TODO_CATEGORY_ID +
+                " WHERE " + COLUMN_CATEGORY_ID + " = " + categoryInput + ";";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(
+                quary,
+                null
+        );
+        boolean success = c.moveToFirst();
+
+        if (success) {
+            Log.d(TAG, "getTodoWithCategory success" + success);
+        }
+
+        return todos;
+
     }
 
     public List<Todo> getAllUserTodos (int userID){
@@ -228,6 +272,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 if ((c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_USER_ID)) == userID)){
 
                     Todo todo = new Todo();
+                    todo.setTodoID(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_ID)));
                     todo.setTodoTitle(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_TITLE)));
                     todo.setTotoContent(c.getString(c.getColumnIndex(DBHelper.COLUMN_TODO_CONTENTS)));
                     todo.setTodoCategory(c.getInt(c.getColumnIndex(DBHelper.COLUMN_TODO_CATEGORY_ID)));
@@ -243,16 +288,7 @@ public class DBHelper extends SQLiteOpenHelper{
         db.close();
         return userTodos;
     }
-    public boolean deleteTodo(){
-        boolean b = false;
 
-        return b;
-    }
-    public Cursor getAllUsersCursor() {
-        SQLiteDatabase db = getReadableDatabase();
-
-        return db.query(TABLE_NAME_USERS, null,null,null,null,null,null);
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

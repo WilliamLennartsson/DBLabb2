@@ -8,6 +8,25 @@ public class Todo {
     private String todoTitle, totoContent;
     private int todoCategory;
 
+    public int getTodoID() {
+        return todoID;
+    }
+
+    public void setTodoID(int todoID) {
+        this.todoID = todoID;
+    }
+
+    private int todoID;
+
+    public String getCategoryString() {
+        return categoryString;
+    }
+
+    public void setCategoryString(String categoryString) {
+        this.categoryString = categoryString;
+    }
+
+    private String categoryString;
     private int todoUserID;
 
     public int getTodoUserID() {
